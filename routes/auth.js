@@ -7,11 +7,11 @@ require("dotenv").config();
 const User = require("../models/User");
 
 const JWT_EXPIRE = process.env.JWT_EXPIRE || "1d";
-const SALT = process.env.SALT || 10;
 
 router.post("/register", async (req, res) => {
-  const { name, email, phone_number, password, role } = req.body;
+  const { name, email, phone_number, password } = req.body;
   try {
+    const SALT = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(password, SALT);
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -21,8 +21,7 @@ router.post("/register", async (req, res) => {
       name,
       email,
       phone_number,
-      password: passwordHash,
-      role,
+      password: passwordHash
     });
     return res.status(201).json(user);
   } catch (err) {
@@ -48,6 +47,11 @@ router.post("/login", async (req, res) => {
   } catch (err) {
     return res.status(400).json({ err });
   }
+});
+
+router.get("/profile", async (req, res) => {
+  const user = await User.findById(req.user_id).select("-password");
+  return res.status(200).json(user);
 });
 
 module.exports = router;
