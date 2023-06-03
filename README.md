@@ -24,3 +24,16 @@ JWT_SECRET = <JWT Secret>
 JWT_EXPIRY = <JWT Expiry>
 SALT = <Salt for Password Hashing>
 ```
+
+## Run on Docker Compose
+
+```
+docker compose up --build -d
+```
+
+## Run on Docker
+
+```
+docker build -t assignease-backend .
+docker run -p 3000:3000 assignease-backend
+```
