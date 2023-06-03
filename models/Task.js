@@ -39,7 +39,6 @@ const taskSchema = new mongoose.Schema({
     },
     bid_time: {
       type: Date,
-      default: Date.now,
     },
   },
   status: {
