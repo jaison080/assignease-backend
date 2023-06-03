@@ -2,7 +2,11 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
+
 const User = require("../models/User");
+
+const JWT_EXPIRE = process.env.JWT_EXPIRE || "1d";
 
 router.post("/register", async (req, res) => {
   const { name, email, phone_number, password, role } = req.body;
@@ -37,7 +41,7 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ err: "Invalid credentials" });
     }
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "365d",
+      expiresIn: JWT_EXPIRE,
     });
     return res.status(200).json({ user, token });
   } catch (err) {

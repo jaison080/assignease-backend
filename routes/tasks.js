@@ -51,16 +51,16 @@ router.delete("/:id", async (req, res) => {
 });
 
 router.post("/bid", async (req, res) => {
-  const { task_id, bidder_id, bid_amount, bid_time } = req.body;
+  const { task_id, bid_amount } = req.body;
   try {
     const task = await Task.findById(task_id);
     if (task.status !== "open") {
       return res.status(400).json({ err: "Task is not open" });
     }
     const bid = {
-      bidder_id,
+      bidder_id: req.user_id,
       bid_amount,
-      bid_time,
+      bid_time: Date.now(),
     };
     task.bids.push(bid);
     await task.save();
@@ -91,18 +91,18 @@ router.post("/assign", async (req, res) => {
 });
 
 router.post("/complete", async (req, res) => {
-  const { task_id, bidder_id } = req.body;
+  const { task_id } = req.body;
   try {
     const task = await Task.findById(task_id);
     if (task.status !== "assigned") {
       return res.status(400).json({ err: "Task is not assigned" });
     }
-    if (task.user_id.toString() !== bidder_id) {
-      return res.status(400).json({ err: "User is not assigned to task" });
+    if (req.user_id.toString() === task.assigned_bid.bidder_id.toString()) {
+      task.status = "completed";
+      await task.save();
+      return res.status(200).json(task);
     }
-    task.status = "completed";
-    await task.save();
-    return res.status(200).json(task);
+    return res.status(400).json({ err: "User is not assigned to task" });
   } catch (err) {
     return res.status(400).json(err);
   }
