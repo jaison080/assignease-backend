@@ -57,6 +57,9 @@ router.post("/bid", async (req, res) => {
     if (task.status !== "open") {
       return res.status(400).json({ err: "Task is not open" });
     }
+    if (req.user_id.toString() === task.user_id.toString()) {
+      return res.status(400).json({ err: "User cannot bid on own task" });
+    }
     const bid = {
       bidder_id: req.user_id,
       bid_amount,
@@ -76,6 +79,9 @@ router.post("/assign", async (req, res) => {
     const task = await Task.findById(task_id);
     if (task.status !== "open") {
       return res.status(400).json({ err: "Task is not open" });
+    }
+    if (req.user_id.toString() !== task.user_id.toString()) {
+      return res.status(400).json({ err: "User is not owner of task" });
     }
     const bid = task.bids.find((bid) => bid.bidder_id.toString() === bidder_id);
     if (!bid) {
