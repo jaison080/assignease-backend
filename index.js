@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const bodyParser = require('body-parser')
+const bodyParser = require("body-parser");
 require("dotenv").config();
 
 const app = express();
@@ -13,10 +13,12 @@ const authHandler = require("./middlewares/authHandler");
 const authRouter = require("./routes/auth");
 const taskRouter = require("./routes/tasks");
 
-mongoose.connect(MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
+mongoose
+  .connect(MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
     console.log("Connected to MongoDB successfully!");
   })
   .catch((err) => {
@@ -24,11 +26,11 @@ mongoose.connect(MONGODB_URI, {
   });
 
 app.listen(PORT, () => {
-    console.log("Server is running on port 3000");
-  });
-  
-app.get("/", (req,res) => {
-  res.send("Hello World!");
+  console.log("Server is running on port 3000");
+});
+
+app.get("/", (req, res) => {
+  return res.status(200).json({ message: "Hello world!" });
 });
 
 app.use(cors());
