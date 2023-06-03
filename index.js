@@ -8,6 +8,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI;
 
+const authHandler = require("./middlewares/authHandler");
+
 const authRouter = require("./routes/auth");
 const taskRouter = require("./routes/tasks");
 
@@ -32,5 +34,6 @@ app.get("/", (req,res) => {
 app.use(cors());
 app.use(bodyParser.json());
 
+app.use(authHandler);
 app.use("/auth", authRouter);
 app.use("/tasks", taskRouter);

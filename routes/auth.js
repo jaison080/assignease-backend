@@ -12,8 +12,7 @@ router.post("/register", async (req, res) => {
         const existingUser = await User.findOne({ email });
         if (existingUser)
         {
-            res.status(400).json({ err: "User already exists" });
-            return;
+            return res.status(400).json({ err: "User already exists" });
         }
         const user = await User.create({
             name,
@@ -22,12 +21,12 @@ router.post("/register", async (req, res) => {
             password: passwordHash,
             role,
         });
-        res.status(201).json(user);
+        return res.status(201).json(user);
     }
     catch (err)
     {
         console.log(err);
-        res.status(400).json(err);
+        return res.status(400).json(err);
     }
 });
 
@@ -38,22 +37,20 @@ router.post("/login", async (req, res) => {
         const user = await User.findOne({ email });
         if (!user)
         {
-            res.status(404).json({ err: "User not found" });
-            return;
+            return res.status(404).json({ err: "User not found" });
         }
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch)
         {
-            res.status(400).json({ err: "Invalid credentials" });
-            return;
+            return res.status(400).json({ err: "Invalid credentials" });
         }
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-        res.status(200).json({ user, token });
+        return res.status(200).json({ user, token });
     }
     catch (err)
     {
         console.log(err);
-        res.status(400).json({ err });
+        return res.status(400).json({ err });
     }
 });
 
