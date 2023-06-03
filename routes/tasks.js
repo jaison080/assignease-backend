@@ -47,16 +47,18 @@ router.post("/", async (req, res) => {
     user_id = decoded.id;
   });
   const { title, description } = req.body;
-  try {
-    const task = await Task.create({
-      title,
-      description,
-      user_id,
-    });
-    res.status(201).json(task);
-  } catch (err) {
-    console.log(err);
-    res.status(400).json(err);
+  if (user_id) {
+    try {
+      const task = await Task.create({
+        title,
+        description,
+        user_id,
+      });
+      res.status(201).json(task);
+    } catch (err) {
+      console.log(err);
+      res.status(400).json(err);
+    }
   }
 });
 
