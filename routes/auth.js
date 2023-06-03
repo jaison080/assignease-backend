@@ -7,11 +7,12 @@ require("dotenv").config();
 const User = require("../models/User");
 
 const JWT_EXPIRE = process.env.JWT_EXPIRE || "1d";
+const SALT = process.env.SALT || 10;
 
 router.post("/register", async (req, res) => {
   const { name, email, phone_number, password, role } = req.body;
   try {
-    const passwordHash = await bcrypt.hash(password, 10);
+    const passwordHash = await bcrypt.hash(password, SALT);
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ err: "User already exists" });
