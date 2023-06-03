@@ -22,7 +22,6 @@ const taskSchema = new mongoose.Schema({
       },
       bid_amount: {
         type: Number,
-        required: [true, "Bid amount is required"],
       },
       bid_time: {
         type: Date,
