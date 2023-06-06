@@ -30,7 +30,6 @@ const userRegistration = async (req, res) => {
     user.password ? delete user?.password : null;
     return res.status(201).json(user);
   } catch (err) {
-    console.log(err);
     return res.status(400).json(err);
   }
 };
