@@ -15,17 +15,22 @@ const userRegistration = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ err: "User already exists" });
     }
-    const user = await User.create({
+    var user = await User.create({
       name,
       email,
       phone_number,
       password: passwordHash,
     });
-    user.token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: JWT_EXPIRE,
-    });
+    user = {
+      token: jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: JWT_EXPIRE,
+      }),
+      ...user._doc,
+    };
+    user.password ? delete user?.password : null;
     return res.status(201).json(user);
   } catch (err) {
+    console.log(err);
     return res.status(400).json(err);
   }
 };
