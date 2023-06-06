@@ -21,6 +21,9 @@ const userRegistration = async (req, res) => {
       phone_number,
       password: passwordHash,
     });
+    user.token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: JWT_EXPIRE,
+    });
     return res.status(201).json(user);
   } catch (err) {
     return res.status(400).json(err);
