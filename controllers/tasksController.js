@@ -17,6 +17,11 @@ const getAssignedTasks = async (req, res) => {
   return res.status(200).json(tasks);
 };
 
+const getBiddedTasks = async (req, res) => {
+  const tasks = await Task.find({ "bids.bidder_id": req.user_id });
+  return res.status(200).json(tasks);
+};
+
 const createTask = async (req, res) => {
   const { title, description, category_id, budget } = req.body;
   try {
@@ -132,6 +137,7 @@ module.exports = {
   getTasks,
   getTasksByUser,
   getAssignedTasks,
+  getBiddedTasks,
   createTask,
   updateTask,
   deleteTask,

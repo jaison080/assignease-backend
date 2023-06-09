@@ -11,6 +11,7 @@ const {
   completeTask,
   getTasksByUser,
   getAssignedTasks,
+  getBiddedTasks,
 } = require("../controllers/tasksController");
 
 router
@@ -22,6 +23,7 @@ router
   .post("/bid", bidTask)
   .post("/assign", assignTask)
   .get("/tasks/assigned", getAssignedTasks)
+  .get("/tasks/bidded", getBiddedTasks)
   .post("/complete", completeTask);
 
 module.exports = router;
