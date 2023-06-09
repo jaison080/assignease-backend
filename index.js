@@ -12,6 +12,7 @@ const authHandler = require("./middlewares/authHandler");
 
 const authRouter = require("./routes/auth");
 const taskRouter = require("./routes/tasks");
+const categoryRouter = require("./routes/categories");
 
 mongoose
   .connect(MONGODB_URI, {
@@ -39,3 +40,4 @@ app.use(bodyParser.json());
 app.use(authHandler);
 app.use("/auth", authRouter);
 app.use("/tasks", taskRouter);
+app.use("/categories", categoryRouter);
