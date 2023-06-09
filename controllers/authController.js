@@ -64,7 +64,32 @@ const userProfile = async (req, res) => {
 };
 
 const top5Users = async (req, res) => {
-  const users = await User.find({}).limit(5).select("-password");
+  const users = await User.aggregate([
+    {
+      $lookup: {
+        from: "tasks",
+        localField: "_id",
+        foreignField: "assigned_bid.bidder_id",
+        as: "tasks",
+      },
+    },
+    {
+      $project: {
+        password: 0,
+        tasks: { $size: "$tasks" },
+        earnings: {
+          $reduce: {
+            input: "$tasks",
+            initialValue: 0,
+            in: { $add: ["$$value", "$$this.assigned_bid.bid_amount"] },
+          },
+        },
+      },
+    },
+    { $sort: { earnings: -1 } },
+    { $limit: 5 },
+  ]);
+
   return res.status(200).json(users);
 };
 
