@@ -14,6 +14,11 @@ const taskSchema = new mongoose.Schema({
     ref: "User",
     required: [true, "User ID is required"],
   },
+  category_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+    required: [true, "Category ID is required"],
+  },
   bids: [
     {
       bidder_id: {

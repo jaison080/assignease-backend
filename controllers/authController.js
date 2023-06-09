@@ -54,9 +54,24 @@ const userLogin = async (req, res) => {
   }
 };
 
+const userLogout = async (req, res) => {
+  return res.status(200).json({ msg: "User logged out" });
+};
+
 const userProfile = async (req, res) => {
   const user = await User.findById(req.user_id).select("-password");
   return res.status(200).json(user);
 };
 
-module.exports = { userRegistration, userLogin, userProfile };
+const top5Users = async (req, res) => {
+  const users = await User.find({}).limit(5).select("-password");
+  return res.status(200).json(users);
+};
+
+module.exports = {
+  userRegistration,
+  userLogin,
+  userProfile,
+  top5Users,
+  userLogout,
+};

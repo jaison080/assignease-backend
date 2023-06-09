@@ -1,3 +1,4 @@
+const Category = require("../models/Category");
 const Task = require("../models/Task");
 
 const getTasks = async (req, res) => {
@@ -6,14 +7,29 @@ const getTasks = async (req, res) => {
   return res.status(200).json(tasks);
 };
 
+const getTasksByUser = async (req, res) => {
+  const tasks = await Task.find({ user_id: req.user_id });
+  return res.status(200).json(tasks);
+};
+
+const getAssignedTasks = async (req, res) => {
+  const tasks = await Task.find({ "assigned_bid.bidder_id": req.user_id });
+  return res.status(200).json(tasks);
+};
+
 const createTask = async (req, res) => {
-  const { title, description } = req.body;
+  const { title, description, category_id, budget } = req.body;
   try {
     const task = await Task.create({
       title,
       description,
+      category_id,
+      budget,
       user_id: req.user_id,
     });
+    const category = await Category.findById(category_id);
+    category.tasks.push(task._id);
+    await category.save();
     return res.status(201).json(task);
   } catch (err) {
     return res.status(400).json(err);
@@ -114,6 +130,8 @@ const completeTask = async (req, res) => {
 
 module.exports = {
   getTasks,
+  getTasksByUser,
+  getAssignedTasks,
   createTask,
   updateTask,
   deleteTask,

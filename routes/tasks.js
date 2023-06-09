@@ -9,14 +9,19 @@ const {
   assignTask,
   deleteTask,
   completeTask,
+  getTasksByUser,
+  getAssignedTasks,
 } = require("../controllers/tasksController");
 
-router.get("/", getTasks)
-      .post("/", createTask)
-      .put("/:id", updateTask)
-      .delete("/:id", deleteTask)
-      .post("/bid", bidTask)
-      .post("/assign", assignTask)
-      .post("/complete", completeTask);
+router
+  .get("/", getTasks)
+  .get("/:user_id", getTasksByUser)
+  .post("/", createTask)
+  .put("/:id", updateTask)
+  .delete("/:id", deleteTask)
+  .post("/bid", bidTask)
+  .post("/assign", assignTask)
+  .get("/tasks/assigned", getAssignedTasks)
+  .post("/complete", completeTask);
 
 module.exports = router;
