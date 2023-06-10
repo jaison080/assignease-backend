@@ -19,10 +19,6 @@ const categorySchema = new mongoose.Schema({
       ref: "Task",
     },
   ],
-  budget: {
-    type: Number,
-    required: [true, "Budget is required"],
-  },
   created_at: {
     type: Date,
     default: Date.now,
