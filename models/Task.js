@@ -19,6 +19,10 @@ const taskSchema = new mongoose.Schema({
     ref: "Category",
     required: [true, "Category ID is required"],
   },
+  budget: {
+    type: Number,
+    required: [true, "Budget is required"],
+  },
   bids: [
     {
       bidder_id: {
