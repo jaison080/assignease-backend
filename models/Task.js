@@ -32,6 +32,9 @@ const taskSchema = new mongoose.Schema({
       bid_amount: {
         type: Number,
       },
+      bid_message: {
+        type: String,
+      },
       bid_time: {
         type: Date,
         default: Date.now,
@@ -48,6 +51,9 @@ const taskSchema = new mongoose.Schema({
     },
     bid_time: {
       type: Date,
+    },
+    bid_message: {
+      type: String,
     },
   },
   status: {

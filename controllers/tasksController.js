@@ -2,23 +2,35 @@ const Category = require("../models/Category");
 const Task = require("../models/Task");
 
 const getTasks = async (req, res) => {
-  const tasks = await Task.find({});
+  const tasks = await Task.find({})
+    .populate("user_id")
+    .populate("bids.bidder_id")
+    .select("-password", "-bids.bidder_id.password");
 
   return res.status(200).json(tasks);
 };
 
 const getTasksByUser = async (req, res) => {
-  const tasks = await Task.find({ user_id: req.user_id });
+  const tasks = await Task.find({ user_id: req.user_id })
+    .populate("user_id")
+    .populate("bids.bidder_id")
+    .select("-password", "-bids.bidder_id.password");
   return res.status(200).json(tasks);
 };
 
 const getAssignedTasks = async (req, res) => {
-  const tasks = await Task.find({ "assigned_bid.bidder_id": req.user_id });
+  const tasks = await Task.find({ "assigned_bid.bidder_id": req.user_id })
+    .populate("user_id")
+    .populate("bids.bidder_id")
+    .select("-password", "-bids.bidder_id.password");
   return res.status(200).json(tasks);
 };
 
 const getBiddedTasks = async (req, res) => {
-  const tasks = await Task.find({ "bids.bidder_id": req.user_id });
+  const tasks = await Task.find({ "bids.bidder_id": req.user_id })
+    .populate("user_id")
+    .populate("bids.bidder_id")
+    .select("-password", "-bids.bidder_id.password");
   return res.status(200).json(tasks);
 };
 
@@ -70,7 +82,7 @@ const deleteTask = async (req, res) => {
 };
 
 const bidTask = async (req, res) => {
-  const { task_id, bid_amount } = req.body;
+  const { task_id, bid_amount, bid_message } = req.body;
   try {
     const task = await Task.findById(task_id);
     if (task.status !== "open") {
@@ -83,6 +95,7 @@ const bidTask = async (req, res) => {
       bidder_id: req.user_id,
       bid_amount,
       bid_time: Date.now(),
+      bid_message,
     };
     task.bids.push(bid);
     await task.save();
