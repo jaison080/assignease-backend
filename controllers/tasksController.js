@@ -4,8 +4,7 @@ const Task = require("../models/Task");
 const getTasks = async (req, res) => {
   const tasks = await Task.find({})
     .populate("user_id")
-    .populate("bids.bidder_id")
-    .select("-password", "-bids.bidder_id.password");
+    .populate("bids.bidder_id");
 
   return res.status(200).json(tasks);
 };
@@ -13,24 +12,21 @@ const getTasks = async (req, res) => {
 const getTasksByUser = async (req, res) => {
   const tasks = await Task.find({ user_id: req.user_id })
     .populate("user_id")
-    .populate("bids.bidder_id")
-    .select("-password", "-bids.bidder_id.password");
+    .populate("bids.bidder_id");
   return res.status(200).json(tasks);
 };
 
 const getAssignedTasks = async (req, res) => {
   const tasks = await Task.find({ "assigned_bid.bidder_id": req.user_id })
     .populate("user_id")
-    .populate("bids.bidder_id")
-    .select("-password", "-bids.bidder_id.password");
+    .populate("bids.bidder_id");
   return res.status(200).json(tasks);
 };
 
 const getBiddedTasks = async (req, res) => {
   const tasks = await Task.find({ "bids.bidder_id": req.user_id })
     .populate("user_id")
-    .populate("bids.bidder_id")
-    .select("-password", "-bids.bidder_id.password");
+    .populate("bids.bidder_id");
   return res.status(200).json(tasks);
 };
 
