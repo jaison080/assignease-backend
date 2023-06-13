@@ -7,6 +7,26 @@ const User = require("../models/User");
 const JWT_EXPIRE = process.env.JWT_EXPIRE || "1d";
 
 const userRegistration = async (req, res) => {
+  if (req.body.web3) {
+    const { wallet_address } = req.body;
+    const existingUser = await User.findOne({ wallet_address });
+    if (existingUser) {
+      return res.status(400).json({ err: "User already exists" });
+    }
+    try {
+      const user = await User.create({
+        wallet_address,
+        web3: true,
+        name: "Web3 User",
+      });
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: JWT_EXPIRE,
+      });
+      return res.status(201).json({ user, token });
+    } catch (err) {
+      return res.status(400).json({ err });
+    }
+  }
   const { name, email, phone_number, password } = req.body;
   try {
     const SALT = await bcrypt.genSalt();
@@ -41,16 +61,7 @@ const userLogin = async (req, res) => {
     try {
       const user = await User.findOne({ wallet_address });
       if (!user) {
-        const user = await User.create({
-          wallet_address,
-          web3: true,
-          name: "Web3 User",
-        });
-
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-          expiresIn: JWT_EXPIRE,
-        });
-        return res.status(200).json({ user, token });
+        return res.status(404).json({ err: "User not found" });
       }
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
         expiresIn: JWT_EXPIRE,
