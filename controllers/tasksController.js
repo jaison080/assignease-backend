@@ -27,6 +27,7 @@ const getBiddedTasks = async (req, res) => {
   const tasks = await Task.find({ "bids.bidder_id": req.user_id })
     .populate("user_id")
     .populate("bids.bidder_id");
+
   return res.status(200).json(tasks);
 };
 

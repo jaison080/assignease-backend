@@ -16,14 +16,14 @@ const {
 
 router
   .get("/", getTasks)
-  .get("/:user_id", getTasksByUser)
+  .get("/user", getTasksByUser)
   .post("/", createTask)
   .put("/:id", updateTask)
   .delete("/:id", deleteTask)
   .post("/bid", bidTask)
   .post("/assign", assignTask)
-  .get("/tasks/assigned", getAssignedTasks)
-  .get("/tasks/bidded", getBiddedTasks)
+  .get("/assigned", getAssignedTasks)
+  .get("/bidded", getBiddedTasks)
   .post("/complete", completeTask);
 
 module.exports = router;
