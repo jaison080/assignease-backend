@@ -88,6 +88,13 @@ const bidTask = async (req, res) => {
     if (req.user_id.toString() === task.user_id.toString()) {
       return res.status(400).json({ err: "User cannot bid on own task" });
     }
+    if (
+      task.bids.find(
+        (bid) => bid.bidder_id.toString() === req.user_id.toString()
+      )
+    ) {
+      return res.status(400).json({ err: "User has already bid on task" });
+    }
     const bid = {
       bidder_id: req.user_id,
       bid_amount,
