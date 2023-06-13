@@ -13,6 +13,7 @@ const getTasksByUser = async (req, res) => {
   const tasks = await Task.find({ user_id: req.user_id })
     .populate("user_id")
     .populate("bids.bidder_id");
+
   return res.status(200).json(tasks);
 };
 
@@ -20,6 +21,7 @@ const getAssignedTasks = async (req, res) => {
   const tasks = await Task.find({ "assigned_bid.bidder_id": req.user_id })
     .populate("user_id")
     .populate("bids.bidder_id");
+
   return res.status(200).json(tasks);
 };
 
@@ -94,6 +96,9 @@ const bidTask = async (req, res) => {
       )
     ) {
       return res.status(400).json({ err: "User has already bid on task" });
+    }
+    if (bid_message.length === 0) {
+      return res.status(400).json({ err: "Bid message cannot be empty" });
     }
     const bid = {
       bidder_id: req.user_id,
