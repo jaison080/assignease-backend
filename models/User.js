@@ -7,19 +7,23 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: [true, "Email is required"],
   },
   phone_number: {
     type: Number,
-    required: [true, "Phone number is required"],
   },
   password: {
     type: String,
-    required: [true, "Password is required"],
   },
   role: {
     type: String,
     default: "User",
+  },
+  web3: {
+    type: Boolean,
+    default: false,
+  },
+  wallet_address: {
+    type: String,
   },
   created_at: {
     type: Date,

@@ -20,6 +20,7 @@ const userRegistration = async (req, res) => {
       email,
       phone_number,
       password: passwordHash,
+      web3: false,
     });
     user = {
       token: jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
@@ -35,6 +36,30 @@ const userRegistration = async (req, res) => {
 };
 
 const userLogin = async (req, res) => {
+  if (req.body.web3) {
+    const { wallet_address } = req.body;
+    try {
+      const user = await User.findOne({ wallet_address });
+      if (!user) {
+        const user = await User.create({
+          wallet_address,
+          web3: true,
+          name: "Web3 User",
+        });
+
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+          expiresIn: JWT_EXPIRE,
+        });
+        return res.status(200).json({ user, token });
+      }
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: JWT_EXPIRE,
+      });
+      return res.status(200).json({ user, token });
+    } catch (err) {
+      return res.status(400).json({ err });
+    }
+  }
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
