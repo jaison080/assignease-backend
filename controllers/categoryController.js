@@ -6,7 +6,13 @@ const getCategories = async (req, res) => {
 };
 
 const getCategory = async (req, res) => {
-  const category = await Category.findById(req.params.id).populate("tasks");
+  const category = await Category.findById(req.params.id).populate({
+    path: "tasks",
+    populate: {
+      path: "user_id",
+      select: "-password",
+    },
+  });
   return res.status(200).json(category);
 };
 
